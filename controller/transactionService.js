@@ -17,10 +17,11 @@ async function transaction(req, res) {
       if(toAccount) {
         const withdrawData = await accHandling.withdraw(user, body.amount);
         if (withdrawData.success) {
+          const remainingBalance = parseFloat(user.balance) - parseFloat(body.amount);
           const depositData = await accHandling.deposit(toAccount, body.amount, body.type);
           if(depositData.success) {
-            const receipt = await accHandling.transactionReceipt(body.accountNumber, toAccount.accountNumber, body.amount, body);
-            const responseData = {success: true, data: {msg: 'Transaction successful', balance: parseFloat(user.balance) - parseFloat(body.amount)}}
+            const receipt = await accHandling.transactionReceipt(body.accountNumber, toAccount.accountNumber, remainingBalance, body);
+            const responseData = {success: true, data: {msg: 'Transaction successful', balance: remainingBalance}}
             if (receipt.success) {
               responseData.data['receipt'] = receipt.data.receipt;
               responseData.data['transaction_id'] = receipt.data.transaction_id;

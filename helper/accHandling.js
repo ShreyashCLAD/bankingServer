@@ -65,15 +65,16 @@ function modifyRecipt (body, transactionData) {
   return transactionData
 }
 
-async function transactionReceipt (from, to, amount, body) {
+async function transactionReceipt (from, to, remainingBalance, body) {
 
   const date = new Date();
   let transactionData = {
     from,
     to,
     timestamp: date.toString(),
-    amount: amount,
-    type: body.type
+    amount: body.amount,
+    type: body.type,
+    remainingBalance
   }
   if (body.type === 'company') {
     transactionData = modifyRecipt(body, transactionData);
